@@ -12,11 +12,11 @@ This is a simple and customizable Python script to organize files in a directory
 
 ## How to Use
 
-1.  Save the Python code in a file named `sorter.py`.
+1.  Save the Python code in a file named `main.py`.
 2.  Create a separate file named `config.json` in the same directory and add your categories to it.
 3.  Run the script from your terminal:
     ```bash
-    python sorter.py
+    python main.py
     ```
 4.  Follow the prompts to enter the path of the directory you want to organize.
 
@@ -59,3 +59,4 @@ You can easily add new categories or file extensions by editing the `config.json
     ".css"
   ]
 }
+

@@ -1,5 +1,6 @@
 import os
 import shutil as sh
+import json
 
 pathInitialized=False
 
@@ -19,7 +20,10 @@ for item in all_items:
 
 extensions=[]
 extentions_unique={}
-diction={'Image': ['.png', '.jpg', '.jpeg', '.bmp', '.webp'], 'Video':['.mp4', '.mkv', '.mov'], 'Audio':['.mp3', '.wav', '.ogg']}
+
+with open('config.json') as f:
+    diction=json.load(f)
+
 
 for file in all_files:
     extensions.append(os.path.splitext(file)[-1])
@@ -32,16 +36,17 @@ def cat(x):
 
     
     for key, value in diction.items():
+        if extn=="":
+            return("NoExt")
+        
         if extn in value:
             return(key)
+        
 
 for file in all_files:
     try:
-        if os.path.isdir(os.path.join(pathToSort,cat(file))):
-            a=0
-        else:
-            os.makedirs(os.path.join(pathToSort,cat(file)))
-            sh.move(os.path.join(pathToSort,file),os.path.join(pathToSort,cat(file),file))
+        os.makedirs(os.path.join(pathToSort,cat(file)),exist_ok=True)
+        sh.move(os.path.join(pathToSort,file),os.path.join(pathToSort,cat(file),file))
     except:
         continue
         

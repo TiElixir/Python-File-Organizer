@@ -1,52 +1,30 @@
 import os
-import shutil as sh
 import json
 
-pathInitialized=False
-
-while pathInitialized==False:
-    pathToSort=input("Enter the path you want to sort: ")
-    if os.path.isdir(pathToSort):
-        break
-    else:
-        print("Invalid Path!")
-
-all_items=os.listdir(pathToSort)
-all_files=[]
-for item in all_items:
-    if os.path.isfile(os.path.join(pathToSort,item)):
-
-        all_files.append(item)
-
-extensions=[]
-extentions_unique={}
-
-with open('config.json') as f:
-    diction=json.load(f)
+from utils.ai_config_generator import generate_temp_config
+from utils.rule_engine import apply_rules
 
 
-for file in all_files:
-    extensions.append(os.path.splitext(file)[-1])
+def main():
+    path = input("Enter the directory to sort: ").strip()
+    #path = ("/home/tielixir/Coding/Projects/Python-File-Organizer/sampleDir").strip()
 
-extensions_unique=set(extensions)
-fileCatPair=[]
+    if not os.path.isdir(path):
+        print("Invalid directory")
+        return
 
-def cat(x):
-    extn=os.path.splitext(x)[-1]
+    instruction = input("Enter sorting instruction: ").strip()
+    #instruction = ("move every file with 'screenshot' in its name to a folder called Screenshots").strip()
 
-    
-    for key, value in diction.items():
-        if extn=="":
-            return("NoExt")
-        
-        if extn in value:
-            return(key)
-        
+    generate_temp_config(instruction)
 
-for file in all_files:
-    try:
-        os.makedirs(os.path.join(pathToSort,cat(file)),exist_ok=True)
-        sh.move(os.path.join(pathToSort,file),os.path.join(pathToSort,cat(file),file))
-    except:
-        continue
-        
+    with open("temp_config.json") as f:
+        config = json.load(f)
+
+    apply_rules(path, config)
+
+    print("Done.")
+
+
+if __name__ == "__main__":
+    main()
